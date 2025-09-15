@@ -1,0 +1,53 @@
+{
+  "name": "campus-ai-assistant",
+  "version": "1.0.0",
+  "description": "Multilingual chatbot platform for college/university websites",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm run install-backend && npm run install-frontend && npm run install-widget",
+    "install-backend": "cd backend && pip install -r requirements.txt",
+    "install-frontend": "cd frontend && npm install",
+    "install-widget": "cd chatbot-widget && npm install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:widget\"",
+    "dev:backend": "cd backend && python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
+    "dev:frontend": "cd frontend && npm start",
+    "dev:widget": "cd chatbot-widget && npm run dev",
+    "build": "npm run build:frontend && npm run build:widget",
+    "build:frontend": "cd frontend && npm run build",
+    "build:widget": "cd chatbot-widget && npm run build",
+    "start": "npm run dev",
+    "setup": "npm run install-all && npm run setup:env",
+    "setup:env": "cd backend && copy .env.example .env",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "demo": "start demo.html"
+  },
+  "keywords": [
+    "chatbot",
+    "multilingual",
+    "college",
+    "university",
+    "ai",
+    "assistant",
+    "hindi",
+    "english",
+    "regional-languages"
+  ],
+  "author": "SIH Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/campus-ai-assistant.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/campus-ai-assistant/issues"
+  },
+  "homepage": "https://yourusername.github.io/campus-ai-assistant"
+}
