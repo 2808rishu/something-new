@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus AI Assistant Widget</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Widget Container -->
+    <div id="campus-chatbot-widget" class="widget-container">
+        <!-- Widget Button -->
+        <div id="widget-button" class="widget-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            </svg>
+            <span class="widget-badge" id="unread-count" style="display: none;">1</span>
+        </div>
+
+        <!-- Chat Window -->
+        <div id="chat-window" class="chat-window hidden">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="header-info">
+                    <div class="header-title">
+                        <h3>Campus Assistant</h3>
+                        <div class="language-selector">
+                            <select id="language-select">
+                                <option value="en">English</option>
+                                <option value="hi">हिन्दी</option>
+                                <option value="mr">मराठी</option>
+                                <option value="ta">தமிழ்</option>
+                                <option value="te">తెలుగు</option>
+                            </select>
+                        </div>
+                    </div>
+                    <span class="status online">Online</span>
+                </div>
+                <div class="header-controls">
+                    <button id="minimize-btn" class="control-btn" title="Minimize">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 19h12v2H6z"/>
+                        </svg>
+                    </button>
+                    <button id="close-btn" class="control-btn" title="Close">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messages-container">
+                <div class="welcome-message">
+                    <div class="bot-message">
+                        <div class="message-avatar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <div class="message-content">
+                            <p id="welcome-text">Hello! I'm here to help with your campus queries. Ask me about fees, admissions, schedules, and more!</p>
+                            <div class="message-time">Now</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Quick suggestions -->
+                <div class="suggestions-container" id="suggestions-container">
+                    <div class="suggestion-chip" data-text="What are the admission requirements?">Admission Requirements</div>
+                    <div class="suggestion-chip" data-text="How much are the fees?">Fee Information</div>
+                    <div class="suggestion-chip" data-text="Show me the timetable">Class Schedule</div>
+                    <div class="suggestion-chip" data-text="Scholarship information">Scholarships</div>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typing-indicator" style="display: none;">
+                <div class="typing-avatar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-container">
+                    <input 
+                        type="text" 
+                        id="message-input" 
+                        placeholder="Type your question here..." 
+                        maxlength="500"
+                    />
+                    <button id="send-btn" class="send-btn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span class="powered-by">Powered by Campus AI Assistant</span>
+                    <button id="escalate-btn" class="escalate-btn" title="Talk to human">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="chatbot-widget.js"></script>
+</body>
+</html>

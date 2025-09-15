@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus AI Assistant Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .feature {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .demo-actions {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            background: #e8f5e8;
+            color: #2d6e2d;
+        }
+        .multilingual-examples {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .language-example {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="header">
+            <h1>🤖 Campus AI Assistant</h1>
+            <p>Multilingual Chatbot for College Websites</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🌍</div>
+                <h3>Multilingual</h3>
+                <p>Supports English, Hindi, Marathi, Tamil, Telugu with automatic language detection</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🚀</div>
+                <h3>Easy Integration</h3>
+                <p>One-line script tag integration for any website</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Ready</h3>
+                <p>Responsive design that works perfectly on all devices</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h3>Smart Responses</h3>
+                <p>AI-powered intent recognition with context management</p>
+            </div>
+        </div>
+
+        <div class="demo-actions">
+            <button class="btn" onclick="openWidget()">Open Chatbot</button>
+            <button class="btn" onclick="sendSampleQuery('en')">Test English</button>
+            <button class="btn" onclick="sendSampleQuery('hi')">Test Hindi</button>
+            <button class="btn" onclick="sendSampleQuery('mr')">Test Marathi</button>
+        </div>
+
+        <div class="multilingual-examples">
+            <h3>Try these sample queries:</h3>
+            <div class="language-example">
+                <strong>English:</strong> "What are the admission requirements?"
+            </div>
+            <div class="language-example">
+                <strong>Hindi:</strong> "प्रवेश की आवश्यकताएं क्या हैं?"
+            </div>
+            <div class="language-example">
+                <strong>Marathi:</strong> "प्रवेशाची आवश्यकताएं काय आहेत?"
+            </div>
+            <div class="language-example">
+                <strong>Tamil:</strong> "சேர்க்கை தேவைகள் என்ன?"
+            </div>
+            <div class="language-example">
+                <strong>Telugu:</strong> "అడ్మిషన్ అవసరాలు ఏమిటి?"
+            </div>
+        </div>
+
+        <div class="status">
+            ✅ Widget loaded successfully! Click the floating chat button to start.
+        </div>
+    </div>
+
+    <!-- Campus AI Assistant Widget -->
+    <link rel="stylesheet" href="chatbot-widget/src/styles.css">
+    <div id="campus-chatbot-widget" class="widget-container">
+        <div id="widget-button" class="widget-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            </svg>
+        </div>
+
+        <div id="chat-window" class="chat-window hidden">
+            <div class="chat-header">
+                <div class="header-info">
+                    <div class="header-title">
+                        <h3>Campus Assistant</h3>
+                        <div class="language-selector">
+                            <select id="language-select">
+                                <option value="en">English</option>
+                                <option value="hi">हिन्दी</option>
+                                <option value="mr">मराठी</option>
+                                <option value="ta">தமிழ்</option>
+                                <option value="te">తెలుగు</option>
+                            </select>
+                        </div>
+                    </div>
+                    <span class="status online">Demo Mode</span>
+                </div>
+                <div class="header-controls">
+                    <button id="minimize-btn" class="control-btn" title="Minimize">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 19h12v2H6z"/>
+                        </svg>
+                    </button>
+                    <button id="close-btn" class="control-btn" title="Close">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messages-container">
+                <div class="welcome-message">
+                    <div class="bot-message">
+                        <div class="message-avatar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <div class="message-content">
+                            <p id="welcome-text">Hello! I'm your Campus AI Assistant. I can help with questions about fees, admissions, schedules, and more in multiple languages!</p>
+                            <div class="message-time">Now</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="suggestions-container" id="suggestions-container">
+                    <div class="suggestion-chip" data-text="What are the admission requirements?">Admission Requirements</div>
+                    <div class="suggestion-chip" data-text="How much are the fees?">Fee Information</div>
+                    <div class="suggestion-chip" data-text="Show me the timetable">Class Schedule</div>
+                    <div class="suggestion-chip" data-text="Scholarship information">Scholarships</div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="input-container">
+                    <input 
+                        type="text" 
+                        id="message-input" 
+                        placeholder="Type your question here..." 
+                        maxlength="500"
+                    />
+                    <button id="send-btn" class="send-btn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span class="powered-by">Powered by Campus AI Assistant</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo Widget Implementation
+        class DemoChatWidget {
+            constructor() {
+                this.isOpen = false;
+                this.currentLanguage = 'en';
+                this.setupEventListeners();
+                this.demoResponses = {
+                    'en': {
+                        'admission': 'For admission requirements, you need: 10+2 certificate, entrance exam score, and application form. The deadline is July 31st.',
+                        'fees': 'Annual fees are ₹50,000 for general category. Payment can be made in 2 installments. Financial aid is available.',
+                        'timetable': 'Class timings are 9:00 AM to 4:00 PM. You can download the timetable from the student portal.',
+                        'scholarship': 'Merit-based scholarships available for top 10% students. Need-based aid for annual income < ₹3 lakhs.'
+                    },
+                    'hi': {
+                        'admission': 'प्रवेश आवश्यकताओं के लिए: 10+2 प्रमाणपत्र, प्रवेश परीक्षा स्कोर, और आवेदन फॉर्म। अंतिम तारीख 31 जुलाई है।',
+                        'fees': 'वार्षिक फीस सामान्य श्रेणी के लिए ₹50,000 है। भुगतान 2 किस्तों में किया जा सकता है। वित्तीय सहायता उपलब्ध है।',
+                        'timetable': 'कक्षा का समय सुबह 9:00 से शाम 4:00 बजे तक है। आप छात्र पोर्टल से समय सारणी डाउनलोड कर सकते हैं।',
+                        'scholarship': 'टॉप 10% छात्रों के लिए मेरिट-आधारित छात्रवृत्ति उपलब्ध है। वार्षिक आय < ₹3 लाख के लिए आवश्यकता-आधारित सहायता।'
+                    },
+                    'mr': {
+                        'admission': 'प्रवेश आवश्यकतांसाठी: 10+2 प्रमाणपत्र, प्रवेश परीक्षेचा स्कोअर आणि अर्जाचा फॉर्म. अंतिम तारीख 31 जुलै आहे.',
+                        'fees': 'वार्षिक फी सामान्य श्रेणीसाठी ₹50,000 आहे. पेमेंट 2 हप्त्यांमध्ये करता येते. आर्थिक मदत उपलब्ध आहे.',
+                        'timetable': 'वर्गाची वेळ सकाळी 9:00 ते संध्याकाळी 4:00 पर्यंत आहे. तुम्ही विद्यार्थी पोर्टलवरून वेळापत्रक डाउनलोड करू शकता.',
+                        'scholarship': 'टॉप 10% विद्यार्थ्यांसाठी मेरिट-आधारित शिष्यवृत्ती उपलब्ध आहे. वार्षिक उत्पन्न < ₹3 लाख साठी गरज-आधारित मदत.'
+                    }
+                };
+            }
+
+            setupEventListeners() {
+                document.getElementById('widget-button').addEventListener('click', () => this.toggleWidget());
+                document.getElementById('close-btn').addEventListener('click', () => this.closeWidget());
+                document.getElementById('minimize-btn').addEventListener('click', () => this.closeWidget());
+                document.getElementById('send-btn').addEventListener('click', () => this.sendMessage());
+                document.getElementById('message-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.sendMessage();
+                });
+                document.getElementById('message-input').addEventListener('input', (e) => {
+                    document.getElementById('send-btn').disabled = !e.target.value.trim();
+                });
+                document.getElementById('language-select').addEventListener('change', (e) => {
+                    this.currentLanguage = e.target.value;
+                });
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('suggestion-chip')) {
+                        this.sendMessage(e.target.dataset.text);
+                    }
+                });
+            }
+
+            toggleWidget() {
+                const chatWindow = document.getElementById('chat-window');
+                if (this.isOpen) {
+                    this.closeWidget();
+                } else {
+                    chatWindow.classList.remove('hidden');
+                    this.isOpen = true;
+                    document.getElementById('message-input').focus();
+                }
+            }
+
+            closeWidget() {
+                document.getElementById('chat-window').classList.add('hidden');
+                this.isOpen = false;
+            }
+
+            sendMessage(text = null) {
+                const input = document.getElementById('message-input');
+                const message = text || input.value.trim();
+                if (!message) return;
+
+                input.value = '';
+                document.getElementById('send-btn').disabled = true;
+
+                this.addMessage('user', message);
+                
+                setTimeout(() => {
+                    const response = this.generateDemoResponse(message);
+                    this.addMessage('bot', response);
+                }, 1000);
+            }
+
+            generateDemoResponse(message) {
+                const msg = message.toLowerCase();
+                const responses = this.demoResponses[this.currentLanguage] || this.demoResponses['en'];
+                
+                if (msg.includes('admission') || msg.includes('प्रवेश') || msg.includes('प्रवेश')) {
+                    return responses.admission;
+                } else if (msg.includes('fee') || msg.includes('फीस') || msg.includes('शुल्क')) {
+                    return responses.fees;
+                } else if (msg.includes('timetable') || msg.includes('schedule') || msg.includes('समय') || msg.includes('वेळ')) {
+                    return responses.timetable;
+                } else if (msg.includes('scholarship') || msg.includes('छात्रवृत्ति') || msg.includes('शिष्यवृत्ती')) {
+                    return responses.scholarship;
+                } else {
+                    return this.currentLanguage === 'hi' ? 
+                        'मुझे खुशी होगी आपकी मदद करने में! कृपया प्रवेश, फीस, समय सारणी या छात्रवृत्ति के बारे में पूछें।' :
+                        this.currentLanguage === 'mr' ?
+                        'मला तुमची मदत करण्यात आनंद होईल! कृपया प्रवेश, फी, वेळापत्रक किंवा शिष्यवृत्तीबद्दल विचारा.' :
+                        'I\'d be happy to help! Please ask about admissions, fees, timetable, or scholarships.';
+                }
+            }
+
+            addMessage(sender, text) {
+                const container = document.getElementById('messages-container');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message fade-in`;
+                
+                const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="${sender === 'bot' ? 
+                                'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' :
+                                'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'
+                            }"/>
+                        </svg>
+                    </div>
+                    <div class="message-content">
+                        <p>${text}</p>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+                
+                container.appendChild(messageDiv);
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        // Initialize demo widget
+        const demoWidget = new DemoChatWidget();
+
+        // Demo functions
+        function openWidget() {
+            demoWidget.toggleWidget();
+        }
+
+        function sendSampleQuery(lang) {
+            demoWidget.currentLanguage = lang;
+            document.getElementById('language-select').value = lang;
+            
+            const queries = {
+                'en': 'What are the admission requirements?',
+                'hi': 'प्रवेश की आवश्यकताएं क्या हैं?',
+                'mr': 'प्रवेशाची आवश्यकताएं काय आहेत?'
+            };
+            
+            if (!demoWidget.isOpen) {
+                demoWidget.toggleWidget();
+            }
+            
+            setTimeout(() => {
+                demoWidget.sendMessage(queries[lang] || queries['en']);
+            }, 300);
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus AI Assistant Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .feature {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .demo-actions {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 6px;
+            background: #e8f5e8;
+            color: #2d6e2d;
+        }
+        .multilingual-examples {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .language-example {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="header">
+            <h1>🤖 Campus AI Assistant</h1>
+            <p>Multilingual Chatbot for College Websites</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🌍</div>
+                <h3>Multilingual</h3>
+                <p>Supports English, Hindi, Marathi, Tamil, Telugu with automatic language detection</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🚀</div>
+                <h3>Easy Integration</h3>
+                <p>One-line script tag integration for any website</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Ready</h3>
+                <p>Responsive design that works perfectly on all devices</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h3>Smart Responses</h3>
+                <p>AI-powered intent recognition with context management</p>
+            </div>
+        </div>
+
+        <div class="demo-actions">
+            <button class="btn" onclick="openWidget()">Open Chatbot</button>
+            <button class="btn" onclick="sendSampleQuery('en')">Test English</button>
+            <button class="btn" onclick="sendSampleQuery('hi')">Test Hindi</button>
+            <button class="btn" onclick="sendSampleQuery('mr')">Test Marathi</button>
+        </div>
+
+        <div class="multilingual-examples">
+            <h3>Try these sample queries:</h3>
+            <div class="language-example">
+                <strong>English:</strong> "What are the admission requirements?"
+            </div>
+            <div class="language-example">
+                <strong>Hindi:</strong> "प्रवेश की आवश्यकताएं क्या हैं?"
+            </div>
+            <div class="language-example">
+                <strong>Marathi:</strong> "प्रवेशाची आवश्यकताएं काय आहेत?"
+            </div>
+            <div class="language-example">
+                <strong>Tamil:</strong> "சேர்க்கை தேவைகள் என்ன?"
+            </div>
+            <div class="language-example">
+                <strong>Telugu:</strong> "అడ్మిషన్ అవసరాలు ఏమిటి?"
+            </div>
+        </div>
+
+        <div class="status">
+            ✅ Widget loaded successfully! Click the floating chat button to start.
+        </div>
+    </div>
+
+    <!-- Campus AI Assistant Widget -->
+    <link rel="stylesheet" href="chatbot-widget/src/styles.css">
+    <div id="campus-chatbot-widget" class="widget-container">
+        <div id="widget-button" class="widget-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            </svg>
+        </div>
+
+        <div id="chat-window" class="chat-window hidden">
+            <div class="chat-header">
+                <div class="header-info">
+                    <div class="header-title">
+                        <h3>Campus Assistant</h3>
+                        <div class="language-selector">
+                            <select id="language-select">
+                                <option value="en">English</option>
+                                <option value="hi">हिन्दी</option>
+                                <option value="mr">मराठी</option>
+                                <option value="ta">தமிழ்</option>
+                                <option value="te">తెలుగు</option>
+                            </select>
+                        </div>
+                    </div>
+                    <span class="status online">Demo Mode</span>
+                </div>
+                <div class="header-controls">
+                    <button id="minimize-btn" class="control-btn" title="Minimize">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 19h12v2H6z"/>
+                        </svg>
+                    </button>
+                    <button id="close-btn" class="control-btn" title="Close">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messages-container">
+                <div class="welcome-message">
+                    <div class="bot-message">
+                        <div class="message-avatar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <div class="message-content">
+                            <p id="welcome-text">Hello! I'm your Campus AI Assistant. I can help with questions about fees, admissions, schedules, and more in multiple languages!</p>
+                            <div class="message-time">Now</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="suggestions-container" id="suggestions-container">
+                    <div class="suggestion-chip" data-text="What are the admission requirements?">Admission Requirements</div>
+                    <div class="suggestion-chip" data-text="How much are the fees?">Fee Information</div>
+                    <div class="suggestion-chip" data-text="Show me the timetable">Class Schedule</div>
+                    <div class="suggestion-chip" data-text="Scholarship information">Scholarships</div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="input-container">
+                    <input 
+                        type="text" 
+                        id="message-input" 
+                        placeholder="Type your question here..." 
+                        maxlength="500"
+                    />
+                    <button id="send-btn" class="send-btn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-footer">
+                    <span class="powered-by">Powered by Campus AI Assistant</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo Widget Implementation
+        class DemoChatWidget {
+            constructor() {
+                this.isOpen = false;
+                this.currentLanguage = 'en';
+                this.setupEventListeners();
+                this.demoResponses = {
+                    'en': {
+                        'admission': 'For admission requirements, you need: 10+2 certificate, entrance exam score, and application form. The deadline is July 31st.',
+                        'fees': 'Annual fees are ₹50,000 for general category. Payment can be made in 2 installments. Financial aid is available.',
+                        'timetable': 'Class timings are 9:00 AM to 4:00 PM. You can download the timetable from the student portal.',
+                        'scholarship': 'Merit-based scholarships available for top 10% students. Need-based aid for annual income < ₹3 lakhs.'
+                    },
+                    'hi': {
+                        'admission': 'प्रवेश आवश्यकताओं के लिए: 10+2 प्रमाणपत्र, प्रवेश परीक्षा स्कोर, और आवेदन फॉर्म। अंतिम तारीख 31 जुलाई है।',
+                        'fees': 'वार्षिक फीस सामान्य श्रेणी के लिए ₹50,000 है। भुगतान 2 किस्तों में किया जा सकता है। वित्तीय सहायता उपलब्ध है।',
+                        'timetable': 'कक्षा का समय सुबह 9:00 से शाम 4:00 बजे तक है। आप छात्र पोर्टल से समय सारणी डाउनलोड कर सकते हैं।',
+                        'scholarship': 'टॉप 10% छात्रों के लिए मेरिट-आधारित छात्रवृत्ति उपलब्ध है। वार्षिक आय < ₹3 लाख के लिए आवश्यकता-आधारित सहायता।'
+                    },
+                    'mr': {
+                        'admission': 'प्रवेश आवश्यकतांसाठी: 10+2 प्रमाणपत्र, प्रवेश परीक्षेचा स्कोअर आणि अर्जाचा फॉर्म. अंतिम तारीख 31 जुलै आहे.',
+                        'fees': 'वार्षिक फी सामान्य श्रेणीसाठी ₹50,000 आहे. पेमेंट 2 हप्त्यांमध्ये करता येते. आर्थिक मदत उपलब्ध आहे.',
+                        'timetable': 'वर्गाची वेळ सकाळी 9:00 ते संध्याकाळी 4:00 पर्यंत आहे. तुम्ही विद्यार्थी पोर्टलवरून वेळापत्रक डाउनलोड करू शकता.',
+                        'scholarship': 'टॉप 10% विद्यार्थ्यांसाठी मेरिट-आधारित शिष्यवृत्ती उपलब्ध आहे. वार्षिक उत्पन्न < ₹3 लाख साठी गरज-आधारित मदत.'
+                    }
+                };
+            }
+
+            setupEventListeners() {
+                document.getElementById('widget-button').addEventListener('click', () => this.toggleWidget());
+                document.getElementById('close-btn').addEventListener('click', () => this.closeWidget());
+                document.getElementById('minimize-btn').addEventListener('click', () => this.closeWidget());
+                document.getElementById('send-btn').addEventListener('click', () => this.sendMessage());
+                document.getElementById('message-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.sendMessage();
+                });
+                document.getElementById('message-input').addEventListener('input', (e) => {
+                    document.getElementById('send-btn').disabled = !e.target.value.trim();
+                });
+                document.getElementById('language-select').addEventListener('change', (e) => {
+                    this.currentLanguage = e.target.value;
+                });
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('suggestion-chip')) {
+                        this.sendMessage(e.target.dataset.text);
+                    }
+                });
+            }
+
+            toggleWidget() {
+                const chatWindow = document.getElementById('chat-window');
+                if (this.isOpen) {
+                    this.closeWidget();
+                } else {
+                    chatWindow.classList.remove('hidden');
+                    this.isOpen = true;
+                    document.getElementById('message-input').focus();
+                }
+            }
+
+            closeWidget() {
+                document.getElementById('chat-window').classList.add('hidden');
+                this.isOpen = false;
+            }
+
+            sendMessage(text = null) {
+                const input = document.getElementById('message-input');
+                const message = text || input.value.trim();
+                if (!message) return;
+
+                input.value = '';
+                document.getElementById('send-btn').disabled = true;
+
+                this.addMessage('user', message);
+                
+                setTimeout(() => {
+                    const response = this.generateDemoResponse(message);
+                    this.addMessage('bot', response);
+                }, 1000);
+            }
+
+            generateDemoResponse(message) {
+                const msg = message.toLowerCase();
+                const responses = this.demoResponses[this.currentLanguage] || this.demoResponses['en'];
+                
+                if (msg.includes('admission') || msg.includes('प्रवेश') || msg.includes('प्रवेश')) {
+                    return responses.admission;
+                } else if (msg.includes('fee') || msg.includes('फीस') || msg.includes('शुल्क')) {
+                    return responses.fees;
+                } else if (msg.includes('timetable') || msg.includes('schedule') || msg.includes('समय') || msg.includes('वेळ')) {
+                    return responses.timetable;
+                } else if (msg.includes('scholarship') || msg.includes('छात्रवृत्ति') || msg.includes('शिष्यवृत्ती')) {
+                    return responses.scholarship;
+                } else {
+                    return this.currentLanguage === 'hi' ? 
+                        'मुझे खुशी होगी आपकी मदद करने में! कृपया प्रवेश, फीस, समय सारणी या छात्रवृत्ति के बारे में पूछें।' :
+                        this.currentLanguage === 'mr' ?
+                        'मला तुमची मदत करण्यात आनंद होईल! कृपया प्रवेश, फी, वेळापत्रक किंवा शिष्यवृत्तीबद्दल विचारा.' :
+                        'I\'d be happy to help! Please ask about admissions, fees, timetable, or scholarships.';
+                }
+            }
+
+            addMessage(sender, text) {
+                const container = document.getElementById('messages-container');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message fade-in`;
+                
+                const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="${sender === 'bot' ? 
+                                'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' :
+                                'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'
+                            }"/>
+                        </svg>
+                    </div>
+                    <div class="message-content">
+                        <p>${text}</p>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+                
+                container.appendChild(messageDiv);
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        // Initialize demo widget
+        const demoWidget = new DemoChatWidget();
+
+        // Demo functions
+        function openWidget() {
+            demoWidget.toggleWidget();
+        }
+
+        function sendSampleQuery(lang) {
+            demoWidget.currentLanguage = lang;
+            document.getElementById('language-select').value = lang;
+            
+            const queries = {
+                'en': 'What are the admission requirements?',
+                'hi': 'प्रवेश की आवश्यकताएं क्या हैं?',
+                'mr': 'प्रवेशाची आवश्यकताएं काय आहेत?'
+            };
+            
+            if (!demoWidget.isOpen) {
+                demoWidget.toggleWidget();
+            }
+            
+            setTimeout(() => {
+                demoWidget.sendMessage(queries[lang] || queries['en']);
+            }, 300);
+        }
+    </script>
+</body>
+</html>

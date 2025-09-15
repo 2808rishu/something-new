@@ -1,0 +1,44 @@
+{
+  "name": "campus-ai-widget",
+  "version": "1.0.0",
+  "description": "Embeddable multilingual chatbot widget for college/university websites",
+  "main": "dist/chatbot-widget.js",
+  "scripts": {
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "postcss src/styles.css -o dist/styles.css",
+    "build:js": "uglifyjs src/chatbot-widget.js -o dist/chatbot-widget.min.js -c -m",
+    "dev": "live-server src/",
+    "watch": "npm-watch"
+  },
+  "watch": {
+    "build": {
+      "patterns": ["src"],
+      "extensions": "js,css,html"
+    }
+  },
+  "keywords": [
+    "chatbot",
+    "widget",
+    "multilingual",
+    "college",
+    "university",
+    "ai",
+    "assistant"
+  ],
+  "author": "Campus AI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "postcss": "^8.4.31",
+    "postcss-cli": "^10.1.0",
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^6.0.1",
+    "uglify-js": "^3.17.4",
+    "live-server": "^1.2.2",
+    "npm-watch": "^0.11.0"
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "README.md"
+  ]
+}
